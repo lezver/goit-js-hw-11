@@ -1,0 +1,98 @@
+@import '~node_modules/modern-normalize/modern-normalize.css';
+
+$time: 250ms;
+$time-distribution: cubic-bezier(0.4, 0, 0.2, 1);
+
+body {
+  background-color: rgba(169, 169, 169, 0.178);
+}
+
+.search-form {
+  position: absolute;
+  width: auto;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  border-radius: 8px;
+  background-color: rgb(15, 42, 161);
+  box-shadow: 0px 3px 6px 1px rgb(15, 42, 161);
+}
+
+.search-form.search-form-fixed {
+  top: 0;
+  left: 0;
+  width: 100%;
+  transform: translateX(0%);
+  padding: 15px 0;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+.search-form > input {
+  padding: 10px;
+  outline: none;
+  border: none;
+  border-bottom-left-radius: 8px;
+  border-top-left-radius: 8px;
+}
+.search-form > button {
+  cursor: pointer;
+  padding: 10px;
+  outline: none;
+  border: none;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+
+  & > svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.gallery {
+  display: block;
+  padding: 100px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  align-items: center;
+}
+.photo-card {
+  height: fit-content;
+  background-color: rgba(131, 112, 90, 0.658);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+
+  box-shadow: 1px 4px 5px 0px #0000008f;
+
+  & > a {
+    display: block;
+    width: 100%;
+    & > img {
+      display: block;
+      width: 100%;
+      transform: scale(1);
+      border: none;
+      transition: transform $time $time-distribution,
+        border-radius $time $time-distribution;
+      &:hover {
+        cursor: pointer;
+        transform: scale(1.05);
+        border-radius: 10px;
+      }
+    }
+  }
+}
+
+.info {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+.info-item {
+  text-align: center;
+}
