@@ -61,11 +61,13 @@ const createOfMarkup = arr => {
 };
 
 const checkResponse = ({ hits, totalHits }) => {
-  if (hits.length === 0)
+  if (hits.length === 0) {
+    refs.loadMoreBtn.classList.add('displaynone');
     Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
     );
-  else {
+  } else {
+    refs.loadMoreBtn.classList.remove('displaynone');
     Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
     createOfMarkup(hits);
   }
@@ -74,7 +76,6 @@ const checkResponse = ({ hits, totalHits }) => {
 const valueForSearch = async e => {
   e.preventDefault();
   refs.gallery.innerHTML = '';
-  refs.loadMoreBtn.classList.add('displaynone');
 
   searchBtn.disabled = true;
 
@@ -91,8 +92,6 @@ const valueForSearch = async e => {
   checkResponse(response);
 
   refs.searchForm.reset();
-
-  refs.loadMoreBtn.classList.remove('displaynone');
 };
 
 const textInput = () => {
