@@ -96,3 +96,18 @@ body {
 .info-item {
   text-align: center;
 }
+
+.load-more {
+  cursor: pointer;
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 50px;
+  border-radius: 8px;
+  background-color: rgba(63, 80, 158, 0.644);
+
+  padding: 10px 15px;
+  transition: all $time $time-distribution;
+  &.displaynone {
+    display: none;
+  }
+}

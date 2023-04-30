@@ -9,7 +9,7 @@ class NewsApiServece {
     this.BASE_QUERY =
       '&per_page=40&image_type=photo&orientation=horizontal&safesearch=true';
     this.page = 1;
-    this.searchQuery = null;
+    this.searchQuery = '';
   }
   async fetchImages() {
     try {

@@ -7,16 +7,12 @@ const refs = {
   searchForm: document.getElementById('search-form'),
   gallery: document.querySelector('[data-dallery]'),
   sentinel: document.querySelector('.sentinel'),
+  loadMoreBtn: document.querySelector('.load-more'),
 };
 
 const newsApiServece = new NewsApiServece();
 const searchBtn = refs.searchForm.children[1];
 const searchInput = refs.searchForm.children[0];
-const gallery = new SimpleLightbox('.gallery a', {
-  overlayOpacity: 0.9,
-  captionsData: 'alt',
-  captionDelay: 250,
-});
 
 searchBtn.disabled = true;
 
@@ -57,7 +53,11 @@ const createOfMarkup = arr => {
 
   refs.gallery.insertAdjacentHTML('beforeend', markup);
 
-  gallery.refresh();
+  new SimpleLightbox('.gallery a', {
+    overlayOpacity: 0.9,
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
 };
 
 const checkResponse = ({ hits, totalHits }) => {
@@ -74,6 +74,7 @@ const checkResponse = ({ hits, totalHits }) => {
 const valueForSearch = async e => {
   e.preventDefault();
   refs.gallery.innerHTML = '';
+  refs.loadMoreBtn.classList.add('displaynone');
 
   searchBtn.disabled = true;
 
@@ -90,6 +91,8 @@ const valueForSearch = async e => {
   checkResponse(response);
 
   refs.searchForm.reset();
+
+  refs.loadMoreBtn.classList.remove('displaynone');
 };
 
 const textInput = () => {
@@ -108,18 +111,11 @@ const onLoadMore = async () => {
 };
 
 refs.searchForm.addEventListener('submit', valueForSearch);
-
 searchInput.addEventListener('input', textInput);
-
-const onEntry = async entries => {
-  await entries.forEach(entry => {
-    if (entry.isIntersecting && newsApiServece.query !== null) onLoadMore();
-  });
-};
-
-const options = {
-  rootMargin: '500px',
-};
-
-const observer = new IntersectionObserver(onEntry, options);
-observer.observe(refs.sentinel);
+refs.loadMoreBtn.addEventListener('click', () => {
+  refs.loadMoreBtn.disabled = true;
+  onLoadMore();
+  setTimeout(() => {
+    refs.loadMoreBtn.disabled = false;
+  }, 1000);
+});
