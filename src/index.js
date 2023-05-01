@@ -77,6 +77,8 @@ const valueForSearch = async e => {
   e.preventDefault();
   refs.gallery.innerHTML = '';
 
+  refs.loadMoreBtn.classList.add('displaynone');
+
   searchBtn.disabled = true;
 
   refs.searchForm.classList.add('search-form-fixed');
@@ -110,7 +112,9 @@ const onLoadMore = async () => {
 };
 
 refs.searchForm.addEventListener('submit', valueForSearch);
+
 searchInput.addEventListener('input', textInput);
+
 refs.loadMoreBtn.addEventListener('click', () => {
   refs.loadMoreBtn.disabled = true;
   onLoadMore();
