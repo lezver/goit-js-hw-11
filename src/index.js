@@ -13,6 +13,11 @@ const refs = {
 const newsApiServece = new NewsApiServece();
 const searchBtn = refs.searchForm.children[1];
 const searchInput = refs.searchForm.children[0];
+const gallery = new SimpleLightbox('.gallery a', {
+  overlayOpacity: 0.9,
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 searchBtn.disabled = true;
 
@@ -53,11 +58,7 @@ const createOfMarkup = arr => {
 
   refs.gallery.insertAdjacentHTML('beforeend', markup);
 
-  new SimpleLightbox('.gallery a', {
-    overlayOpacity: 0.9,
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
+  gallery.refresh();
 };
 
 const checkResponse = ({ hits, totalHits }) => {
@@ -109,6 +110,16 @@ const onLoadMore = async () => {
 
   const response = await newsApiServece.fetchImages();
   createOfMarkup(response.hits);
+
+  const { height: cardHeight } =
+    refs.gallery.firstElementChild.getBoundingClientRect();
+
+  console.log(refs.gallery.firstElementChild);
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
 };
 
 refs.searchForm.addEventListener('submit', valueForSearch);
