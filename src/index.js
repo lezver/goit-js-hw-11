@@ -19,6 +19,9 @@ const gallery = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
 });
 
+let count = 0;
+let totalCount = 0;
+
 searchBtn.disabled = true;
 
 const createOfMarkup = arr => {
@@ -62,13 +65,14 @@ const createOfMarkup = arr => {
 };
 
 const checkResponse = ({ hits, totalHits }) => {
+  totalCount = totalHits;
+  count += hits.length;
+
   if (hits.length === 0) {
-    refs.loadMoreBtn.classList.add('displaynone');
     Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
     );
   } else {
-    refs.loadMoreBtn.classList.remove('displaynone');
     Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
     createOfMarkup(hits);
   }
@@ -78,13 +82,11 @@ const valueForSearch = async e => {
   e.preventDefault();
   refs.gallery.innerHTML = '';
 
-  refs.loadMoreBtn.classList.add('displaynone');
-
   searchBtn.disabled = true;
 
-  refs.searchForm.classList.add('search-form-fixed');
+  if (!e.currentTarget.elements[0].value.trim()) return;
 
-  if (!e.currentTarget.elements[0].value) return;
+  onListener();
 
   newsApiServece.query = e.currentTarget.elements[0].value.trim();
 
@@ -120,16 +122,25 @@ const onLoadMore = async () => {
     top: cardHeight * 2,
     behavior: 'smooth',
   });
+  onListener();
+};
+
+const scrollListener = () => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+  if (scrollTop + clientHeight >= scrollHeight - 5 && count !== totalCount) {
+    onLoadMore();
+    ofListener();
+  }
+};
+
+const onListener = () => {
+  window.addEventListener('scroll', scrollListener);
+};
+const ofListener = () => {
+  window.removeEventListener('scroll', scrollListener);
 };
 
 refs.searchForm.addEventListener('submit', valueForSearch);
 
 searchInput.addEventListener('input', textInput);
-
-refs.loadMoreBtn.addEventListener('click', () => {
-  refs.loadMoreBtn.disabled = true;
-  onLoadMore();
-  setTimeout(() => {
-    refs.loadMoreBtn.disabled = false;
-  }, 1000);
-});
