@@ -116,8 +116,6 @@ const onLoadMore = async () => {
   const { height: cardHeight } =
     refs.gallery.firstElementChild.getBoundingClientRect();
 
-  console.log(refs.gallery.firstElementChild);
-
   window.scrollBy({
     top: cardHeight * 2,
     behavior: 'smooth',
