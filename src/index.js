@@ -119,8 +119,10 @@ const checkResponse = ({ hits, totalHits }) => {
 const textInput = () => {
   if (searchInput.value) {
     searchBtn.disabled = false;
+    searchBtn.style.cursor = 'pointer';
   } else {
     searchBtn.disabled = true;
+    searchBtn.style.cursor = 'default';
   }
 };
 
