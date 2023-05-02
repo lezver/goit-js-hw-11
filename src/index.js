@@ -19,10 +19,46 @@ const gallery = new SimpleLightbox('.gallery a', {
   captionDelay: 250,
 });
 
-let count = 0;
+let sumOfPages = 0;
 let totalCount = 0;
 
 searchBtn.disabled = true;
+
+const onLoadMore = async () => {
+  newsApiServece.incrementPage();
+
+  const response = await newsApiServece.fetchImages();
+  createOfMarkup(response.hits);
+
+  const { height: cardHeight } =
+    refs.gallery.firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
+  onListener();
+};
+
+const offListener = () => {
+  window.removeEventListener('scroll', scrollListener);
+};
+
+const onListener = () => {
+  window.addEventListener('scroll', scrollListener);
+};
+
+const scrollListener = () => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+  if (
+    scrollTop + clientHeight >= scrollHeight - 5 &&
+    sumOfPages !== totalCount
+  ) {
+    onLoadMore();
+    offListener();
+  }
+};
 
 const createOfMarkup = arr => {
   const markup = arr.reduce(
@@ -66,15 +102,25 @@ const createOfMarkup = arr => {
 
 const checkResponse = ({ hits, totalHits }) => {
   totalCount = totalHits;
-  count += hits.length;
+  sumOfPages += hits.length;
 
   if (hits.length === 0) {
     Notiflix.Notify.failure(
       "We're sorry, but you've reached the end of search results."
     );
   } else {
+    refs.searchForm.classList.add('search-form-fixed');
+
     Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
     createOfMarkup(hits);
+  }
+};
+
+const textInput = () => {
+  if (searchInput.value) {
+    searchBtn.disabled = false;
+  } else {
+    searchBtn.disabled = true;
   }
 };
 
@@ -97,46 +143,6 @@ const valueForSearch = async e => {
   checkResponse(response);
 
   refs.searchForm.reset();
-};
-
-const textInput = () => {
-  if (searchInput.value) {
-    searchBtn.disabled = false;
-  } else {
-    searchBtn.disabled = true;
-  }
-};
-
-const onLoadMore = async () => {
-  newsApiServece.incrementPage();
-
-  const response = await newsApiServece.fetchImages();
-  createOfMarkup(response.hits);
-
-  const { height: cardHeight } =
-    refs.gallery.firstElementChild.getBoundingClientRect();
-
-  window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
-  });
-  onListener();
-};
-
-const scrollListener = () => {
-  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-
-  if (scrollTop + clientHeight >= scrollHeight - 5 && count !== totalCount) {
-    onLoadMore();
-    ofListener();
-  }
-};
-
-const onListener = () => {
-  window.addEventListener('scroll', scrollListener);
-};
-const ofListener = () => {
-  window.removeEventListener('scroll', scrollListener);
 };
 
 refs.searchForm.addEventListener('submit', valueForSearch);
